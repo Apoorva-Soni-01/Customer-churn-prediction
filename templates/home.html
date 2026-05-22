@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Churn Prediction</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body { background-color: #f0f4f8; font-family: 'Segoe UI', sans-serif; }
+    .card { border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); }
+    .card-header { background: linear-gradient(135deg, #1c4590, #2176ae); border-radius: 12px 12px 0 0 !important; }
+    .btn-primary { background: #1c4590; border: none; width: 100%; padding: 12px; font-size: 16px; border-radius: 8px; }
+    .btn-primary:hover { background: #2176ae; }
+    .result-box { border-radius: 10px; padding: 20px; margin-top: 20px; font-size: 18px; font-weight: 600; text-align: center; }
+    label { font-weight: 600; color: #333; }
+    select, input { border-radius: 8px !important; }
+    h2 { font-size: 1.1rem; color: #555; font-weight: 400; }
+  </style>
+</head>
+<body>
+<div class="container py-5">
+  <div class="card">
+    <div class="card-header text-white text-center py-4">
+      <h1 class="mb-1">🔍 Customer Churn Prediction</h1>
+      <h2>Enter customer details to predict churn likelihood</h2>
+    </div>
+    <div class="card-body p-4">
+      <form action="/predict" method="POST">
+        <div class="row">
+
+          <!-- Numerical Fields -->
+          <div class="col-md-4 mb-3">
+            <label>Senior Citizen</label>
+            <select class="form-control" name="SeniorCitizen" required>
+              <option value="">-- Select --</option>
+              <option value="0">No (0)</option>
+              <option value="1">Yes (1)</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Monthly Charges ($)</label>
+            <input type="number" step="0.01" class="form-control" name="MonthlyCharges" placeholder="e.g. 65.50" required>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Total Charges ($)</label>
+            <input type="number" step="0.01" class="form-control" name="TotalCharges" placeholder="e.g. 1200.00" required>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Tenure (months)</label>
+            <input type="number" class="form-control" name="tenure" placeholder="e.g. 24" min="1" max="72" required>
+          </div>
+
+          <!-- Categorical Fields -->
+          <div class="col-md-4 mb-3">
+            <label>Gender</label>
+            <select class="form-control" name="gender" required>
+              <option value="">-- Select --</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Partner</label>
+            <select class="form-control" name="Partner" required>
+              <option value="">-- Select --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Dependents</label>
+            <select class="form-control" name="Dependents" required>
+              <option value="">-- Select --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Phone Service</label>
+            <select class="form-control" name="PhoneService" required>
+              <option value="">-- Select --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Multiple Lines</label>
+            <select class="form-control" name="MultipleLines" required>
+              <option value="">-- Select --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+              <option value="No phone service">No Phone Service</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Internet Service</label>
+            <select class="form-control" name="InternetService" required>
+              <option value="">-- Select --</option>
+              <option value="DSL">DSL</option>
+              <option value="Fiber optic">Fiber Optic</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Online Security</label>
+            <select class="form-control" name="OnlineSecurity" required>
+              <option value="">-- Select --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+              <option value="No internet service">No Internet Service</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Online Backup</label>
+            <select class="form-control" name="OnlineBackup" required>
+              <option value="">-- Select --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+              <option value="No internet service">No Internet Service</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Device Protection</label>
+            <select class="form-control" name="DeviceProtection" required>
+              <option value="">-- Select --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+              <option value="No internet service">No Internet Service</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Tech Support</label>
+            <select class="form-control" name="TechSupport" required>
+              <option value="">-- Select --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+              <option value="No internet service">No Internet Service</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Streaming TV</label>
+            <select class="form-control" name="StreamingTV" required>
+              <option value="">-- Select --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+              <option value="No internet service">No Internet Service</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Streaming Movies</label>
+            <select class="form-control" name="StreamingMovies" required>
+              <option value="">-- Select --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+              <option value="No internet service">No Internet Service</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Contract</label>
+            <select class="form-control" name="Contract" required>
+              <option value="">-- Select --</option>
+              <option value="Month-to-month">Month-to-month</option>
+              <option value="One year">One Year</option>
+              <option value="Two year">Two Year</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Paperless Billing</label>
+            <select class="form-control" name="PaperlessBilling" required>
+              <option value="">-- Select --</option>
+              <option value="Yes">Yes</option>
+              <option value="No">No</option>
+            </select>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label>Payment Method</label>
+            <select class="form-control" name="PaymentMethod" required>
+              <option value="">-- Select --</option>
+              <option value="Electronic check">Electronic Check</option>
+              <option value="Mailed check">Mailed Check</option>
+              <option value="Bank transfer (automatic)">Bank Transfer (Automatic)</option>
+              <option value="Credit card (automatic)">Credit Card (Automatic)</option>
+            </select>
+          </div>
+
+        </div>
+
+        <!-- Submit -->
+        <div class="row mt-3">
+          <div class="col-md-6 offset-md-3">
+            <button type="submit" class="btn btn-primary">Predict Churn</button>
+          </div>
+        </div>
+      </form>
+
+      <!-- Result -->
+      {% if result %}
+      <div class="result-box alert alert-{{ result_class }}">
+        <p class="mb-1">{{ result }}</p>
+        <p class="mb-0" style="font-size:15px; font-weight:400;">{{ confidence }}</p>
+      </div>
+      {% endif %}
+
+    </div>
+  </div>
+</div>
+</body>
+</html>
